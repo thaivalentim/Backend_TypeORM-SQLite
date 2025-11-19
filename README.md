@@ -1,11 +1,12 @@
-# TypeORM + SQLite: Aprendendo sobre backend, banco de dados, persistência de dados e CRUD
+# Backend com Node.js + Express + TypeORM + SQLite
 
 Um projeto didático para aprender **TypeORM**, **SQLite** e desenvolvimento de **APIs REST** com Node.js e Express.
 
 ## 📋 O que este projeto faz?
 
 - **Sistema de cadastro e login** com JWT
-- **CRUD completo** para gerenciar itens pessoais
+- **Montagem de times de heróis** com validação rigorosa
+- **CRUD completo** para gerenciar heróis
 - **Autenticação segura** com bcrypt e tokens
 - **Banco SQLite** com TypeORM
 - **API REST** testável via Postman
@@ -23,21 +24,23 @@ Um projeto didático para aprender **TypeORM**, **SQLite** e desenvolvimento de 
 
 ```
 ├── config/
-│   └── database.js          # Configuração do SQLite
+│   └── database.js         # Configuração do SQLite
 ├── controllers/
-│   ├── authController.js    # Lógica de login/cadastro
-│   └── itemController.js    # CRUD dos itens
+│   ├── authController.js   # Lógica de login/cadastro
+│   └── heroController.js   # CRUD dos heróis
 ├── middleware/
-│   └── auth.js              # Verificação JWT
+│   └── auth.js             # Verificação JWT
 ├── models/
-│   ├── User.js              # Modelo da tabela users
-│   └── Item.js              # Modelo da tabela items
+│   ├── User.js             # Modelo da tabela users
+│   └── Hero.js             # Modelo da tabela heroes_team
 ├── routes/
-│   ├── auth.js              # Rotas de autenticação
-│   └── items.js             # Rotas CRUD
-├── .env                     # Variáveis de ambiente
-├── app.js                   # Servidor principal
-└── users.sqlite             # Banco de dados 
+│   ├── auth.js             # Rotas de autenticação
+│   └── heroes.js           # Rotas CRUD de heróis
+├── utils/
+│   └── heroValidators.js   # Validadores de heróis
+├── .env                    # Variáveis de ambiente
+├── app.js                  # Servidor principal
+└── heroes.sqlite           # Banco de dados (gerado automaticamente)
 ```
 
 ## 🚀 Como executar
@@ -54,7 +57,7 @@ npm install
 ```
 
 ### 3. Configure as variáveis de ambiente
-Crie um arquivo `.env` na raiz do projeto:
+Copie `.env.example` para `.env` e configure:
 ```
 JWT_SECRET=sua_chave_secreta_aqui_256_bits
 ```
@@ -93,48 +96,50 @@ Content-Type: application/json
 }
 ```
 
-### CRUD de Itens (Requer autenticação)
+### CRUD de Heróis (Requer autenticação)
 
-#### Criar item
+#### Criar herói
 ```http
-POST /api/items/create
+POST /api/heroes/create
 Authorization: Bearer SEU_TOKEN
 Content-Type: application/json
 
 {
-  "title": "Minha tarefa",
-  "description": "Descrição da tarefa",
-  "status": "pending"
+  "nome": "Superman",
+  "habilidade": "Voo",
+  "nivel": 95,
+  "categoria": "Alienígena",
+  "origem": "Krypton"
 }
 ```
 
-#### Listar itens
+#### Listar time
 ```http
-GET /api/items/list
+GET /api/heroes/team
 Authorization: Bearer SEU_TOKEN
 ```
 
-#### Buscar item específico
+#### Buscar herói específico
 ```http
-GET /api/items/:id
+GET /api/heroes/:id
 Authorization: Bearer SEU_TOKEN
 ```
 
-#### Atualizar item
+#### Atualizar herói
 ```http
-PUT /api/items/:id
+PUT /api/heroes/:id
 Authorization: Bearer SEU_TOKEN
 Content-Type: application/json
 
 {
-  "title": "Título atualizado",
-  "status": "completed"
+  "nivel": 100,
+  "categoria": "Deus"
 }
 ```
 
-#### Deletar item
+#### Deletar herói
 ```http
-DELETE /api/items/:id
+DELETE /api/heroes/:id
 Authorization: Bearer SEU_TOKEN
 ```
 
@@ -144,7 +149,7 @@ Authorization: Bearer SEU_TOKEN
 2. **Faça login** usando `/api/auth/login`
 3. **Copie o token** da resposta do login
 4. **Use o token** no header `Authorization: Bearer TOKEN` nas rotas protegidas
-5. **Teste o CRUD** criando, listando, atualizando e deletando itens
+5. **Monte seu time** criando, listando, atualizando e removendo heróis
 
 ## 🗄️ Banco de dados
 
@@ -157,14 +162,26 @@ O projeto usa **SQLite** com duas tabelas:
 - `password` - Senha criptografada (bcrypt)
 - `createdAt` - Data de criação
 
-### Tabela `items`
+### Tabela `heroes_team`
 - `id` - Chave primária auto-incremento
 - `userId` - Referência ao usuário
-- `title` - Título do item
-- `description` - Descrição (opcional)
-- `status` - Status do item (active, pending, completed)
+- `nome` - Nome do herói (validado)
+- `habilidade` - Poder do herói (validado)
+- `nivel` - Nível do herói (1-100)
+- `categoria` - Tipo do herói
+- `origem` - Origem do herói
 - `createdAt` - Data de criação
 - `updatedAt` - Data de atualização
+
+## 🦸‍♂️ Heróis Disponíveis
+
+**32 heróis válidos:** Superman, Batman, Wonder Woman, Flash, Spider-Man, Iron Man, Captain America, Thor, Hulk, e mais!
+
+**25 habilidades válidas:** Voo, Super Força, Velocidade, Invisibilidade, Telepatia, Magia, e mais!
+
+## 📚 Para visualizar o banco
+
+Use o **DB Browser for SQLite** para abrir o arquivo `heroes.sqlite` e visualizar os dados.
 
 ## 🎯 Conceitos aprendidos
 
@@ -177,16 +194,16 @@ O projeto usa **SQLite** com duas tabelas:
 - **Arquitetura MVC** (Model-View-Controller)
 - **API REST** com Express
 - **CRUD** completo
-- **Relacionamentos** entre tabelas
+- **Validações** de dados
 
 ## 🔧 Scripts disponíveis
 
 - `npm start` - Executa o servidor
 - `npm run dev` - Executa com auto-reload
 
-## 📚 Para visualizar o banco
+## 📖 Documentação Técnica
 
-Use o **DB Browser for SQLite** para abrir o arquivo `users.sqlite` e visualizar os dados.
+Veja o arquivo `ARQUITETURA_TECNICA.md` para entender como todas as tecnologias trabalham juntas.
 
 ## 🤝 Contribuindo
 
@@ -195,7 +212,3 @@ Este é um projeto didático! Sinta-se livre para:
 - Sugerir melhorias
 - Adicionar novas funcionalidades
 - Usar como base para seus projetos
-
----
-
-**Projeto didático desenvolvido para apresentação amadora sobre Type ORM, SQLite e APIs REST com Node.js e Express.**🎓

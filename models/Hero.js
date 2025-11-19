@@ -1,8 +1,8 @@
 const { EntitySchema } = require("typeorm");
 
-const Item = new EntitySchema({
-    name: "Item",
-    tableName: "items",
+const Hero = new EntitySchema({
+    name: "Hero",
+    tableName: "heroes_team",
     columns: {
         id: {
             primary: true,
@@ -12,16 +12,23 @@ const Item = new EntitySchema({
         userId: {
             type: "int",
         },
-        title: {
+        nome: {
             type: "varchar",
         },
-        description: {
-            type: "text",
+        habilidade: {
+            type: "varchar",
+        },
+        nivel: {
+            type: "int",
+            default: 1,
+        },
+        categoria: {
+            type: "varchar",
+            default: "Herói",
+        },
+        origem: {
+            type: "varchar",
             nullable: true,
-        },
-        status: {
-            type: "varchar",
-            default: "active",
         },
         createdAt: {
             type: "datetime",
@@ -34,4 +41,4 @@ const Item = new EntitySchema({
     },
 });
 
-module.exports = { Item };
+module.exports = { Hero };

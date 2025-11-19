@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const { AppDataSource } = require('./config/database');
 const authRoutes = require('./routes/auth');
-const itemRoutes = require('./routes/items');
+const heroRoutes = require('./routes/heroes');
 
 const app = express();
 const port = 3001;
@@ -21,7 +21,7 @@ app.use(express.json());
 
 // Rotas
 app.use('/api/auth', authRoutes);
-app.use('/api/items', itemRoutes);
+app.use('/api/heroes', heroRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
